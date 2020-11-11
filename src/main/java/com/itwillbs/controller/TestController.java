@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,4 +91,37 @@ public class TestController {
 		System.out.println("REST컨트롤러 checkVO메서드 호출"+vo);
 	}
 	
+	//ResponseEntity 테스트
+	//http://localhost:8088/test/sendListError
+	@RequestMapping(value = "sendListError")
+	public ResponseEntity<List<SampleVO>> sendListAuth() {
+		//System.out.println("HTTP상태리턴: " + HttpStatus.FORBIDDEN);
+		List<SampleVO> voList = new ArrayList<SampleVO>();
+		
+		for(int i=0;i<10;i++) {
+			SampleVO vo = new SampleVO(i, "나혜석", "0"+i+"0-123-4567" );
+			voList.add(vo);
+		}
+		
+		System.out.println("HTTP상태리턴: " + voList);
+		return new ResponseEntity<List<SampleVO>>(voList, HttpStatus.NOT_FOUND);
+	}
+	
+	//ResponseEntity를 사용하면 단순한 객체 정보도 JSON형태로 전달가능하지만,
+	//HTML 정보와 JS정보까지 전달할 수 있다.(예를 들어 Header정보)
+	//이를 통해 결과확인 및 오류메세지 체크가 가능해진다.
+	@RequestMapping(value = "res2")
+	public ResponseEntity res2() {
+		System.out.println("res2 메서드 호출");
+		
+		//응답정보 중에 header에 데이터를 add해서 보낸다.
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-type", "text/html; charset=UTF-8");
+		String msg = "<script>";
+		msg += "alert('얼럿창테스트');";
+		msg += "location.href='/res1';";
+		msg += "</script>";
+		
+		return new ResponseEntity(msg,responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
