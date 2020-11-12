@@ -1,8 +1,12 @@
 package com.itwillbs.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,5 +37,27 @@ public class HomeController {
 		
 		return map;
 	}
+	
+	//rest get/post/put/delete방식 테스트
+	// http://localhost:8088/boardtest
+	@RequestMapping(value = "/boardtest", method = RequestMethod.GET)
+	public String home2(Locale locale, Model model) {
+		return "JSONtest2";
+	}
+
+	
+	
+	
+	
+	//favicon
+	@RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
+	public void favicon( HttpServletRequest request, HttpServletResponse reponse ) {
+		try {
+		  reponse.sendRedirect("/resources/favicon.ico");
+		} catch (IOException e) {
+		  e.printStackTrace();
+		}
+	}
+	
 	
 }
